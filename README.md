@@ -10,7 +10,7 @@ Este proyecto fue desarrollado como solución a una **prueba técnica para el ro
 
 La aplicación se encuentra desplegada en **GitHub Pages**.
 
-👉 **[Ver aplicación en vivo](https://mcruz99.github.io/angular-movie-app/)**
+👉 **[Ver aplicación en vivo](https://elemike.github.io/angular-movie-app/)**
 
 ---
 
