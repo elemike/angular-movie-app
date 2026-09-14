@@ -1,0 +1,99 @@
+<div class="movie-list-container">
+  <h2>Buscador de Películas</h2>
+
+  <!-- Campo de Búsqueda -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Buscar película por título...</mat-label>
+    <input 
+      matInput 
+      type="text" 
+      [value]="searchQuery" 
+      (input)="onSearchChange($event)"
+      placeholder="Ej. Matrix, Inception..." />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <!-- Indicador de Carga (Spinner) -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <!-- Contenedor con la Tabla -->
+  <div class="table-container mat-elevation-z8" [style.display]="isLoading ? 'none' : 'block'">
+    <table mat-table [dataSource]="dataSource">
+
+      <!-- Columna Poster -->
+      <ng-container matColumnDef="poster">
+        <th mat-header-cell *matHeaderCellDef> Poster </th>
+        <td mat-cell *matCellDef="let movie">
+          <img 
+            *ngIf="movie.poster_path; else noImage" 
+            [src]="'https://image.tmdb.org/t/p/w92' + movie.poster_path" 
+            [alt]="movie.title" 
+            class="poster-img" />
+          <ng-template #noImage>
+            <div class="no-poster">Sin Imagen</div>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Columna Título -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Título </th>
+        <td mat-cell *matCellDef="let movie" class="title-cell"> 
+          <strong>{{ movie.title }}</strong> 
+        </td>
+      </ng-container>
+
+      <!-- Columna Fecha de Lanzamiento -->
+      <ng-container matColumnDef="release_date">
+        <th mat-header-cell *matHeaderCellDef> Lanzamiento </th>
+        <td mat-cell *matCellDef="let movie"> 
+          {{ movie.release_date | date:'dd/MM/yyyy' }} 
+        </td>
+      </ng-container>
+
+      <!-- Columna Calificación -->
+      <ng-container matColumnDef="vote_average">
+        <th mat-header-cell *matHeaderCellDef> Calificación </th>
+        <td mat-cell *matCellDef="let movie"> 
+          <span class="rating-badge">★ {{ movie.vote_average | number:'1.1-1' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Columna Resumen -->
+      <ng-container matColumnDef="overview">
+        <th mat-header-cell *matHeaderCellDef> Resumen </th>
+        <td mat-cell *matCellDef="let movie" class="overview-cell"> 
+          {{ movie.overview || 'Sin descripción disponible.' }} 
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Fila vacía si no hay resultados -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+          No se encontraron películas para la búsqueda realizada.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Paginador Angular Material -->
+  <mat-paginator 
+    [length]="totalResults"
+    [pageSize]="pageSize"
+    [pageIndex]="currentPage - 1"
+    [disabled]="isLoading"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+    aria-label="Seleccionar página de películas">
+  </mat-paginator>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>Michael Steven Cruz Torres - Prueba Tecnica Desarrollador Frontend</p>
+  </footer>
+</div>
